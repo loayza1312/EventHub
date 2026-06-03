@@ -1,83 +1,112 @@
-<div style="max-width: 1200px; margin: 0 auto; font-family: 'Segoe UI', Roboto, sans-serif; color: #f8fafc;">
+<div class="page-container">
   
-  <div style="background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); border-radius: 24px; padding: 60px 40px; text-align: center; border: 1px solid #1e293b; margin-bottom: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-    <h1 style="font-size: 42px; font-weight: 800; margin-top: 0; margin-bottom: 16px; background: linear-gradient(to right, #3b82f6, #a855f7); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-      Esplora i Migliori Live del 2026
-    </h1>
-    <p style="color: #94a3b8; font-size: 16px; max-width: 600px; margin: 0 auto; line-height: 1.6;">
-      Acquista i tuoi biglietti ufficiali in totale sicurezza. Scegli l'evento e prenota il tuo posto prima che vada tutto esaurito.
-    </p>
+  <div class="header-banner">
+    <h1>Esplora i Migliori Live del 2026</h1>
+    <p>Acquista i tuoi biglietti ufficiali in totale sicurezza. Scegli l'evento e prenota il tuo posto prima che vada tutto esaurito.</p>
   </div>
 
-  <h2 style="font-size: 26px; font-weight: 700; margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
-    📅 Eventi Disponibili
-  </h2>
+  <div class="filters-container">
+    <div class="filter-box search-flex">
+      <label>Cerca Evento</label>
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Inserisci titolo o parole chiave...">
+    </div>
+    
+    <div class="filter-box select-flex">
+      <label>Città</label>
+      <select [(ngModel)]="selectedCity">
+        <option value="">Tutte le città</option>
+        <option value="Milano">Milano</option>
+        <option value="Roma">Roma</option>
+        <option value="Firenze">Firenze</option>
+      </select>
+    </div>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 60px;">
-    @for (event of events; track event.id) {
-      <div style="background-color: #1e293b; border-radius: 20px; border: 1px solid #334155; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        
+    <div class="filter-box select-flex">
+      <label>Prezzo Massimo</label>
+      <input type="number" [(ngModel)]="maxPrice" placeholder="Es. 30">
+    </div>
+  </div>
+
+  <h2>📅 Eventi Disponibili</h2>
+
+  <div class="events-grid">
+    @for (event of filteredEvents; track event.id) {
+      <div class="event-card">
         <div>
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-            <span style="background-color: rgba(59,130,246,0.15); color: #3b82f6; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;">
-              Live Concert
-            </span>
-            <span style="font-size: 22px; font-weight: 800; color: #10b981;">
-              {{ event.price | currency:'EUR':'symbol':'1.2-2' }}
-            </span>
+          <div class="card-header">
+            <span class="badge">Live Concert</span>
+            <span class="price">{{ event.price }} €</span>
           </div>
-
-          <h3 style="font-size: 22px; font-weight: 700; margin: 0 0 10px 0; color: #f1f5f9;">{{ event.title }}</h3>
-          <p style="color: #94a3b8; font-size: 14px; margin: 0 0 20px 0; line-height: 1.5; min-height: 42px;">{{ event.desc }}</p>
-
-          <div style="border-top: 1px solid #334155; padding-top: 15px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #cbd5e1;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span>📅</span> <b>{{ event.date }}</b>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span>📍</span> {{ event.location }}
-            </div>
+          <h3>{{ event.title }}</h3>
+          <p class="description">{{ event.description }}</p>
+          <div class="info-rows">
+            <div>Data: <b>{{ event.date }}</b></div>
+            <div>Luogo: <b>{{ event.location }}</b></div>
           </div>
         </div>
-
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px;">
-            <span style="color: #94a3b8;">Disponibilità:</span>
-            <span [style.color]="event.capacity > 50 ? '#10b981' : '#f59e0b'" style="font-weight: 600;">
-              ● {{ event.capacity }} posti rimasti
-            </span>
+        <div class="card-footer">
+          <div class="availability">
+            <span>Disponibilità:</span>
+            <span class="seats">● {{ event.capacity }} posti rimasti</span>
           </div>
-
-          <button (click)="bookTicket(event)" style="width: 100%; background-color: #4f46e5; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: background 0.2s;">
-            Prenota Biglietto
-          </button>
+          <button (click)="bookTicket(event)">Prenota Biglietto</button>
         </div>
-
+      </div>
+    } @empty {
+      <div class="empty-fallback">
+        🔍 Nessun evento corrisponde ai criteri di ricerca impostati.
       </div>
     }
   </div>
 
-  <div style="background-color: #1e293b; border-radius: 24px; border: 1px solid #334155; padding: 35px; margin-bottom: 40px;">
-    <h2 style="font-size: 24px; font-weight: 700; margin-top: 0; margin-bottom: 10px; color: #f1f5f9;">💬 Community Hub</h2>
-    <p style="color: #94a3b8; font-size: 14px; margin-bottom: 25px;">Cosa dicono i partecipanti degli eventi sulla nostra piattaforma.</p>
+  <div class="reviews-section">
+    <h2>💬 Recensioni e Valutazioni</h2>
+    <p class="subtitle">Condividi la tua opinione sugli eventi che si sono già conclusi.</p>
 
-    <div style="display: flex; gap: 15px; margin-bottom: 30px;">
-      <input type="text" [(ngModel)]="newCommentText" placeholder="Lascia una recensione o fai una domanda..." style="flex: 1; background-color: #0f172a; border: 1px solid #475569; padding: 14px; border-radius: 12px; color: white; font-size: 14px; box-sizing: border-box;">
-      <button (click)="addComment()" style="background-color: #10b981; color: white; border: none; padding: 0 25px; border-radius: 12px; font-weight: 700; cursor: pointer;">
-        Invia
-      </button>
+    <div class="review-form">
+      <div class="form-row">
+        <div class="filter-box search-flex">
+          <label>Quale concerto vuoi valutare?</label>
+          <select [(ngModel)]="selectedEventForReview">
+            @for (e of events; track e.id) {
+              <option [value]="e.id">{{ e.title }} ({{ e.date }})</option>
+            }
+          </select>
+        </div>
+        <div class="filter-box select-flex">
+          <label>Valutazione (1-5)</label>
+          <select [(ngModel)]="newCommentRating" class="stars-select">
+            <option [value]="5">⭐⭐⭐⭐⭐ (5/5)</option>
+            <option [value]="4">⭐⭐⭐⭐ (4/5)</option>
+            <option [value]="3">⭐⭐⭐ (3/5)</option>
+            <option [value]="2">⭐⭐ (2/5)</option>
+            <option [value]="1">⭐ (1/5)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-submit-row">
+        <input type="text" [(ngModel)]="newCommentText" placeholder="Raccontaci la tua esperienza al concerto...">
+        <button (click)="addComment()">Invia</button>
+      </div>
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: 15px;">
-      @for (comment of comments; track comment.id) {
-        <div style="background-color: #0f172a; border-radius: 14px; padding: 18px; border: 1px solid #334155;">
-          <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px;">
-            <span style="color: #3b82f6; font-weight: 700;">&#64;{{ comment.user }}</span>
-            <span style="color: #64748b;">{{ comment.date }}</span>
+    <div class="comments-list">
+      @for (comment of comments; track $index) {
+        <div class="comment-item">
+          <div class="comment-meta">
+            <div>
+              <span class="author">@{{ comment.author }}</span>
+              <span class="action">ha recensito</span>
+              <b class="target">{{ comment.eventTitle }}</b>
+            </div>
+            <span class="date">{{ comment.date }}</span>
           </div>
-          <p style="margin: 0; color: #e2e8f0; font-size: 14px; line-height: 1.5;">
-            "{{ comment.text }}"
-          </p>
+          <div class="stars-row">{{ comment.stars }}</div>
+          <p class="comment-text">"{{ comment.text }}"</p>
+        </div>
+      } @empty {
+        <div class="empty-comments">
+          💬 Nessuna recensione ancora presente. Sii il primo a scriverne una!
         </div>
       }
     </div>
