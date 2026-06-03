@@ -1,0 +1,99 @@
+<div style="max-width: 1100px; margin: 0 auto; font-family: 'Segoe UI', Roboto, sans-serif; padding-bottom: 60px; color: #f8fafc;">
+  
+  <div style="margin-bottom: 40px;">
+    <h2 style="font-size: 32px; font-weight: 800; margin: 0 0 10px 0; background: linear-gradient(to right, #10b981, #3b82f6); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+      Dashboard Organizzatore
+    </h2>
+    <p style="color: #94a3b8; font-size: 15px; margin: 0;">
+      Gestisci i tuoi eventi, monitora gli incassi in tempo reale ed esporta le liste dei partecipanti.
+    </p>
+  </div>
+
+  <div style="background-color: #1e293b; padding: 25px; border-radius: 16px; border: 1px solid #334155; margin-bottom: 40px;">
+    <h3 style="font-size: 20px; font-weight: 700; margin-top: 0; margin-bottom: 20px; color: #f1f5f9;">✨ Crea Nuovo Evento</h3>
+    <form (submit)="createEvent(); $event.preventDefault();" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
+      
+      <div style="flex: 2; min-width: 200px;">
+        <label style="display: block; font-size: 13px; color: #94a3b8; margin-bottom: 5px; font-weight: 600;">Titolo Evento</label>
+        <input type="text" [(ngModel)]="newEvent.title" name="title" placeholder="Es. Festival Rock" style="width: 100%; background-color: #0f172a; border: 1px solid #475569; padding: 10px; border-radius: 8px; color: white; box-sizing: border-box;">
+      </div>
+
+      <div style="flex: 1; min-width: 150px;">
+        <label style="display: block; font-size: 13px; color: #94a3b8; margin-bottom: 5px; font-weight: 600;">Data</label>
+        <input type="date" [(ngModel)]="newEvent.date" name="date" style="width: 100%; background-color: #0f172a; border: 1px solid #475569; padding: 10px; border-radius: 8px; color: white; box-sizing: border-box;">
+      </div>
+
+      <div style="flex: 1; min-width: 100px;">
+        <label style="display: block; font-size: 13px; color: #94a3b8; margin-bottom: 5px; font-weight: 600;">Prezzo Biglietto (€)</label>
+        <input type="number" [(ngModel)]="newEvent.ticketPrice" name="price" style="width: 100%; background-color: #0f172a; border: 1px solid #475569; padding: 10px; border-radius: 8px; color: white; box-sizing: border-box;">
+      </div>
+
+      <div style="flex: 1; min-width: 100px;">
+        <label style="display: block; font-size: 13px; color: #94a3b8; margin-bottom: 5px; font-weight: 600;">Capacità Max</label>
+        <input type="number" [(ngModel)]="newEvent.maxCapacity" name="capacity" style="width: 100%; background-color: #0f172a; border: 1px solid #475569; padding: 10px; border-radius: 8px; color: white; box-sizing: border-box;">
+      </div>
+
+      <button type="submit" style="background-color: #10b981; color: white; border: none; padding: 11px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.2s;">
+        Pubblica Evento
+      </button>
+    </form>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px;">
+    <div style="background-color: #1e293b; padding: 25px; border-radius: 16px; border: 1px solid #334155;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <span style="color: #94a3b8; font-size: 14px; font-weight: 600; text-transform: uppercase;">Incassi Totali Stimati</span>
+        <span style="font-size: 24px;">💰</span>
+      </div>
+      <h3 style="font-size: 32px; font-weight: 800; color: #10b981; margin: 0;">{{ totalEarnings }} €</h3>
+    </div>
+
+    <div style="background-color: #1e293b; padding: 25px; border-radius: 16px; border: 1px solid #334155;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <span style="color: #94a3b8; font-size: 14px; font-weight: 600; text-transform: uppercase;">Biglietti Venduti</span>
+        <span style="font-size: 24px;">🎟️</span>
+      </div>
+      <h3 style="font-size: 32px; font-weight: 800; color: #3b82f6; margin: 0;">{{ totalTicketsSold }}</h3>
+    </div>
+
+    <div style="background-color: #1e293b; padding: 25px; border-radius: 16px; border: 1px solid #334155;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <span style="color: #94a3b8; font-size: 14px; font-weight: 600; text-transform: uppercase;">Eventi Creati</span>
+        <span style="font-size: 24px;">✨</span>
+      </div>
+      <h3 style="font-size: 32px; font-weight: 800; color: #f59e0b; margin: 0;">{{ events.length }}</h3>
+    </div>
+  </div>
+
+  <h3 style="font-size: 22px; font-weight: 700; color: #f8fafc; margin-bottom: 20px;">I Tuoi Eventi</h3>
+  
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    @for (event of events; track event.id) {
+      <div style="background-color: #1e293b; border-radius: 16px; border: 1px solid #334155; padding: 25px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;">
+        <div>
+          <h4 style="font-size: 20px; font-weight: 700; color: #f8fafc; margin: 0 0 8px 0;">{{ event.title }}</h4>
+          <p style="color: #94a3b8; font-size: 14px; margin: 0; display: flex; gap: 15px;">
+            <span>📅 Data: <b>{{ event.date }}</b></span>
+            <span>🎫 Prezzo: <b>{{ event.ticketPrice }}€</b></span>
+          </p>
+        </div>
+
+        <div style="text-align: center; min-width: 150px;">
+          <div style="font-size: 13px; color: #cbd5e1; margin-bottom: 5px;">Vendite / Capacità</div>
+          <div style="font-size: 16px; font-weight: 700; color: #f8fafc;">{{ event.ticketsSold }} / {{ event.maxCapacity }}</div>
+        </div>
+
+        <div style="text-align: right;">
+          <div style="font-size: 13px; color: #94a3b8; margin-bottom: 2px;">Incasso Stimato</div>
+          <div style="font-size: 18px; font-weight: 700; color: #10b981;">{{ (event.ticketsSold * event.ticketPrice) }} €</div>
+        </div>
+
+        <div>
+          <button (click)="exportToCSV(event)" style="background-color: #0284c7; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            📥 Scarica CSV Iscritti
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

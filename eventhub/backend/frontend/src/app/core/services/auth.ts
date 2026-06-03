@@ -1,44 +1,69 @@
-import { Component, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
-@Component({
-  // Nota: Questo servizio non ha un template visivo, gestisce solo i dati
-})
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // L'URL di base del tuo server Flask (modifica la porta se il tuo backend gira su un'altra porta)
-  private apiUrl = 'http://127.0.0.1:5000/api'; 
+  private http = inject(HttpClient);
+  
+  // Sostituisci questo URL con il tuo esatto indirizzo di Codespaces del backend (porta 5000 o 5001)
+  private apiUrl = 'https://glowing-tribble-pjpqvrj4w6rwc9p7g-5000.app.github.dev/api';
 
-  constructor(private http: HttpClient) {}
+  // Stato reattivo globale dell'utente
+  private tokenSubject = new BehaviorSubject<string | null>(localStorage.getItem('token'));
+  private userSubject = new BehaviorSubject<any | null>(JSON.parse(localStorage.getItem('user') || 'null'));
 
-  // Funzione per inviare i dati di registrazione a Flask
-  register(username: string, email: string, password: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, { username, email, password });
-  }
+  token$ = this.tokenSubject.asObservable();
+  user$ = this.userSubject.asObservable();
 
-  // Funzione per inviare le credenziali di login e salvare il token JWT ricevuto
-  login(email: string, password: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
-      tap(response => {
-        if (response && response.token) {
-          // Salva il token di sessione nel browser dell'utente
-          localStorage.setItem('token', response.token);
+  login(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+      tap(res => {
+        if (res.token) {
+          localStorage.setItem('token', res.token);
+          // Decodifichiamo manualmente il JWT base64 per estrarre il ruolo e i dati dell'utente
+          const payload = JSON.parse(atob(res.token.split('.')[1]));
+          
+          const userData = {
+            id: payload.user_id,
+            username: res.username,
+            role: payload.role || 'user' // Default su 'user' se manca
+          };
+
+          localStorage.setItem('user', JSON.stringify(userData));
+          this.tokenSubject.next(res.token);
+          this.userSubject.next(userData);
         }
       })
     );
   }
 
-  // Funzione per verificare se l'utente è loggato
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+  register(user: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, user);
   }
 
-  // Funzione per disconnettersi svuotando la sessione
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.tokenSubject.next(null);
+    this.userSubject.next(null);
+  }
+
+  getToken(): string | null {
+    return this.tokenSubject.value;
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.tokenSubject.value;
+  }
+
+  getUserRole(): string {
+    return this.userSubject.value ? this.userSubject.value.role : 'guest';
+  }
+
+  getUsername(): string {
+    return this.userSubject.value ? this.userSubject.value.username : '';
   }
 }

@@ -1,0 +1,51 @@
+<div style="max-width: 600px; margin: 40px auto; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); font-family: sans-serif;">
+  <h2 style="color: #3f51b5; margin-bottom: 25px;">Pubblica Nuovo Evento</h2>
+  
+  <form (ngSubmit)="onCreateEvent()">
+    <div style="margin-bottom: 15px;">
+      <label style="display:block; margin-bottom: 5px; font-weight:bold;">Titolo Evento</label>
+      <input type="text" [(ngModel)]="title" name="title" required style="width:100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+      <label style="display:block; margin-bottom: 5px; font-weight:bold;">Descrizione</label>
+      <textarea [(ngModel)]="description" name="description" required rows="4" style="width:100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;"></textarea>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+      <div>
+        <label style="display:block; margin-bottom: 5px; font-weight:bold;">Data</label>
+        <input type="date" [(ngModel)]="date" name="date" required style="width:100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom: 5px; font-weight:bold;">Luogo</label>
+        <input type="text" [(ngModel)]="location" name="location" required style="width:100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+      <div>
+        <label style="display:block; margin-bottom: 5px; font-weight:bold;">Prezzo (€)</label>
+        <input type="number" [(ngModel)]="price" name="price" style="width:100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom: 5px; font-weight:bold;">Posti Totali</label>
+        <input type="number" [(ngModel)]="total_slots" name="total_slots" required style="width:100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="display:block; margin-bottom: 5px; font-weight:bold;">Categoria</label>
+      <select [(ngModel)]="category" name="category" style="width:100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+        <option value="Concerti">Concerti</option>
+        <option value="Workshop">Workshop</option>
+        <option value="Libri">Presentazioni Libri</option>
+      </select>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <button type="submit" style="flex: 2; background-color: #3f51b5; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer;">Salva Evento</button>
+      <button type="button" routerLink="/" style="flex: 1; background-color: #e0e0e0; color: #333; border: none; padding: 12px; border-radius: 6px; cursor: pointer;">Annulla</button>
+    </div>
+  </form>
+</div>

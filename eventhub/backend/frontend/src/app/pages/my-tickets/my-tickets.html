@@ -1,0 +1,67 @@
+<div style="max-width: 900px; margin: 0 auto; font-family: 'Segoe UI', Roboto, sans-serif; padding-bottom: 60px; color: #f8fafc;">
+  
+  <div style="margin-bottom: 40px;">
+    <h2 style="font-size: 32px; font-weight: 800; margin: 0 0 10px 0; background: linear-gradient(to right, #3b82f6, #818cf8); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+      I Miei Biglietti 🎟️
+    </h2>
+    <p style="color: #94a3b8; font-size: 15px; margin: 0;">
+      Mostra i QR code all'ingresso dell'evento per effettuare il check-in elettronico.
+    </p>
+  </div>
+
+  @if (tickets.length === 0) {
+    <div style="text-align: center; padding: 60px 20px; background-color: #1e293b; border-radius: 20px; border: 1px solid #334155;">
+      <span style="font-size: 48px;">🤷‍♂️</span>
+      <h3 style="font-size: 20px; color: #f1f5f9; margin: 15px 0 10px 0;">Nessun biglietto prenotato</h3>
+      <p style="color: #94a3b8; margin: 0 0 20px 0; font-size: 14px;">Non hai ancora prenotato nessun evento per il 2026.</p>
+      <button routerLink="/" style="background-color: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+        Esplora gli Eventi
+      </button>
+    </div>
+  } @else {
+    
+    <div style="display: flex; flex-direction: column; gap: 25px;">
+      @for (ticket of tickets; track ticket.id) {
+        <div style="background: linear-gradient(to right, #1e293b 70%, #1e1b4b 100%); border-radius: 20px; border: 1px solid #334155; display: flex; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2);">
+          
+          <div style="flex: 1; padding: 30px; border-right: 2px dashed #334155; position: relative;">
+            
+            <div style="position: absolute; right: -10px; top: -10px; width: 20px; height: 20px; background-color: #0f172a; border-radius: 50%;"></div>
+            <div style="position: absolute; right: -10px; bottom: -10px; width: 20px; height: 20px; background-color: #0f172a; border-radius: 50%;"></div>
+
+            <span style="background-color: rgba(168,85,247,0.15); color: #c084fc; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; text-transform: uppercase;">
+              OFFICIAL TICKET
+            </span>
+            
+            <h3 style="font-size: 24px; font-weight: 700; margin: 15px 0 15px 0; color: #f1f5f9;">
+              {{ ticket.title }}
+            </h3>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; color: #cbd5e1;">
+              <div>📅 Data: <b style="color: white;">{{ ticket.date }}</b></div>
+              <div>📍 Luogo: <b style="color: white;">{{ ticket.location }}</b></div>
+              <div>💺 Posto: <b style="color: #10b981;">{{ ticket.seat }}</b></div>
+            </div>
+
+            <div style="margin-top: 25px; font-size: 12px; color: #64748b; font-family: monospace;">
+              ID: {{ ticket.ticketCode }}
+            </div>
+          </div>
+
+          <div style="width: 240px; background-color: rgba(15,23,42,0.4); padding: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 200px;">
+            <div style="background-color: white; padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+              <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + ticket.ticketCode" 
+                   alt="QR Code Ingresso" 
+                   style="width: 130px; height: 130px; display: block;">
+            </div>
+            <span style="font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 12px; text-align: center;">
+              Scansiona all'ingresso
+            </span>
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

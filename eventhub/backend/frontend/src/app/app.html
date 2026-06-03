@@ -1,1 +1,42 @@
-<router-outlet></router-outlet>
+<nav style="background-color: #1e293b; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; font-family: 'Segoe UI', sans-serif;">
+  
+  <a routerLink="/" style="font-size: 24px; font-weight: 800; color: #3b82f6; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+    ✨ EventHub
+  </a>
+
+  <div style="display: flex; align-items: center; gap: 12px;">
+    
+    @if (isLoggedIn()) {
+      
+      <button routerLink="/my-tickets" style="background-color: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+        🎟️ I Miei Biglietti
+      </button>
+
+      @if (isAdmin()) {
+        <button routerLink="/admin/dashboard" style="background-color: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+          👑 Pannello Admin
+        </button>
+      }
+
+      <span style="background-color: #334155; color: #cbd5e1; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14px;">
+        👤 {{ getUsername() }}
+      </span>
+
+      <button (click)="logout()" style="background-color: #dc2626; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+        Disconnetti
+      </button>
+
+    } @else {
+      
+      <button routerLink="/login" style="background-color: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+        Accedi
+      </button>
+      
+    }
+
+  </div>
+</nav>
+
+<main style="padding: 40px 5%;">
+  <router-outlet></router-outlet>
+</main>

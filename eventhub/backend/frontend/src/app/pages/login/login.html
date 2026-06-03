@@ -1,1 +1,26 @@
-<p>login works!</p>
+<div style="max-width: 400px; margin: 60px auto; padding: 40px 30px; background-color: #1e293b; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border: 1px solid #334155; font-family: Arial, sans-serif;">
+  
+  <h2 style="text-align: center; color: #f8fafc; margin-bottom: 10px; font-weight: 800; font-size: 28px;">Bentornato</h2>
+  <p style="text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 30px;">Accedi per gestire ed acquistare i tuoi biglietti.</p>
+
+  <form (ngSubmit)="onSubmit()">
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; font-size: 14px;">Indirizzo Email</label>
+      <input type="email" [(ngModel)]="email" name="email" placeholder="nome@esempio.com" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white;" required>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; font-size: 14px;">Password</label>
+      <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white;" required>
+    </div>
+
+    <button type="submit" style="width: 100%; background: linear-gradient(to right, #4f46e5, #6366f1); color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 16px; box-shadow: 0 4px 15px rgba(79,70,229,0.3);">
+      Accedi ora
+    </button>
+  </form>
+
+  <p style="text-align: center; margin-top: 25px; font-size: 14px; color: #94a3b8;">
+    Non hai un account? <a routerLink="/register" style="color: #818cf8; text-decoration: none; font-weight: bold;">Registrati qui</a>
+  </p>
+
+</div>
