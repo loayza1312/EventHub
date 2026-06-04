@@ -90,12 +90,28 @@ export class HomeComponent implements OnInit {
 
   bookTicket(event: any) {
     if (!event) return;
-    const userJson = localStorage.getItem('user');
-    const user = userJson ? JSON.parse(userJson) : { id: 1, username: 'mirko' };
 
+    // 1. Controlliamo se l'utente esiste davvero nel LocalStorage
+    const userJson = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+
+    if (!userJson || !token) {
+      // Se non è loggato, blocchiamo la prenotazione!
+      alert('⚠️ Devi effettuare l\'accesso per poter prenotare un biglietto!');
+      window.location.href = '/login'; // Lo spediamo al login
+      return;
+    }
+
+    // 2. Se è loggato, recuperiamo i suoi dati reali
+    const user = JSON.parse(userJson);
+
+    // 3. Inviamo la richiesta reale al backend Flask
     fetch(`${this.backendUrl}/api/bookings`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Inviamo il JWT reale
+      },
       body: JSON.stringify({ user_id: user.id, event_id: event.id })
     })
     .then(res => res.json())
@@ -103,7 +119,7 @@ export class HomeComponent implements OnInit {
       if (data.error) {
         alert(`❌ Errore: ${data.error}`);
       } else {
-        alert(`🎟️ Prenotazione Riuscita!\nCodice: ${data.ticketCode}`);
+        alert(`🎟️ Prenotazione Riuscita!\nCodice Biglietto: ${data.ticketCode}`);
         if (event.capacity > 0) event.capacity--;
       }
     })
@@ -116,12 +132,36 @@ export class HomeComponent implements OnInit {
       return;
     }
 
+    // Controllo Autenticazione Reale per le Recensioni
     const userJson = localStorage.getItem('user');
-    const user = userJson ? JSON.parse(userJson) : { id: 1, username: 'mirko' };
+    const token = localStorage.getItem('token');
+
+    if (!userJson || !token) {
+      alert('⚠️ Devi effettuare il login per poter rilasciare una recensione!');
+      window.location.href = '/login';
+      return;
+    }
+
+    // 🛡️ CONTROLLO DATA CRITICO: Verifica se l'evento si è già svolto
+    const targetEvent = this.events.find(e => String(e.id) === String(this.selectedEventForReview));
+    if (targetEvent) {
+      const eventDate = new Date(targetEvent.date);
+      const currentDate = new Date(); // Data corrente (Anno corrente 2026)
+
+      if (eventDate > currentDate) {
+        alert('❌ Requisito non soddisfatto: Non puoi recensire un evento futuro. Aspetta che l\'evento si sia concluso!');
+        return;
+      }
+    }
+
+    const user = JSON.parse(userJson);
 
     fetch(`${this.backendUrl}/api/reviews`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Header JWT di protezione
+      },
       body: JSON.stringify({
         user_id: user.id,
         event_id: Number(this.selectedEventForReview),
@@ -131,21 +171,24 @@ export class HomeComponent implements OnInit {
       })
     })
     .then(res => {
-      if (!res.ok) throw new Error('Impossibile salvare la recensione');
+      if (!res.ok) throw new Error('Impossibile salvare la recensione. Controlla i dati o la data dell\'evento.');
       return res.json();
     })
     .then(data => {
       this.comments.unshift({
-        author: data.author,
-        eventTitle: data.eventTitle,
-        text: data.text,
-        rating: data.rating,
-        stars: '⭐'.repeat(data.rating),
-        date: data.date
+        author: data.author || user.username,
+        eventTitle: data.eventTitle || (targetEvent ? targetEvent.title : 'Evento'),
+        text: data.text || this.newCommentText,
+        rating: data.rating || Number(this.newCommentRating),
+        stars: '⭐'.repeat(data.rating || Number(this.newCommentRating)),
+        date: data.date || new Date().toLocaleDateString('it-IT')
       });
       this.newCommentText = '';
-      alert('🎉 Recensione pubblicata!');
+      alert('🎉 Recensione pubblicata con successo sul database!');
     })
-    .catch(err => console.error("Errore nell'invio del commento:", err));
+    .catch(err => {
+      console.error("Errore nell'invio del commento:", err);
+      alert(`❌ Errore d'invio: ${err.message}`);
+    });
   }
 }

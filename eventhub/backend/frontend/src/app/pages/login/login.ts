@@ -2,13 +2,23 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth'; // sistema il percorso se differisce
+import { AuthService } from '../../core/services/auth'; // Lasciato intatto come da tua struttura
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './login.html', // o login.component.html
+  templateUrl: './login.html',
+  styles: [`
+    :host {
+      display: block;
+      background-color: #0b0f19;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  `]
 })
 export class LoginComponent {
   email = '';
@@ -34,13 +44,13 @@ export class LoginComponent {
         const mockUser = {
           id: 99,
           username: 'Mirko (Organizer)',
-          role: 'organizer' // Puoi cambiare in 'admin' o 'user' per testare i vari ruoli
+          role: 'organizer' // Configurato su organizer così puoi testare anche la dashboard!
         };
 
         localStorage.setItem('token', 'finto-token-jwt-di-test-super-segreto');
         localStorage.setItem('user', JSON.stringify(mockUser));
         
-        // Forziamo il refresh dello stato reattivo (se implementato) e andiamo alla Home
+        // Forziamo il refresh dello stato reattivo e andiamo alla Home
         window.location.href = '/'; 
       }
     });

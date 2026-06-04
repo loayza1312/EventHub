@@ -1,45 +1,73 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './register.html'
+  imports: [CommonModule, FormsModule],
+  templateUrl: './register.html',
+  styles: [`
+    :host {
+      display: block;
+      background-color: #0b0f19;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  `]
 })
 export class RegisterComponent {
-  name = '';
+  username = '';
   email = '';
   password = '';
   confirmPassword = '';
+  role = 'user'; // Valore di default preimpostato
 
-  constructor(private http: HttpClient, private router: Router) {}
+  private backendUrl = 'https://glowing-tribble-pjpqvrj4w6rwc9p7g-5000.app.github.dev';
 
-  onRegister() {
-    if (!this.name || !this.email || !this.password || !this.confirmPassword) {
-      alert('❌ Compila tutti i campi.');
+  onRegister(event: Event) {
+    event.preventDefault(); // Blocca il refresh nativo della pagina
+
+    if (!this.username || !this.email || !this.password || !this.confirmPassword) {
+      alert('❌ Compila tutti i campi obbligatori.');
       return;
     }
 
     if (this.password !== this.confirmPassword) {
-      alert('❌ Le password non corrispondono.');
+      alert('❌ Le password inserite non corrispondono.');
       return;
     }
 
-    const body = { name: this.name, email: this.email, password: this.password };
+    const body = {
+      username: this.username,
+      email: this.email,
+      password: this.password,
+      role: this.role
+    };
 
-    this.http.post('https://glowing-tribble-pjpqvrj4w6rwc9p7g-5000.app.github.dev/api/register', body).subscribe({
-      next: () => {
-        alert('🎉 Registrazione completata con successo! Ora puoi accedere.');
-        this.router.navigate(['/login']);
+    fetch(`${this.backendUrl}/api/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
       },
-      error: (err) => {
-        console.error('Errore registrazione:', err);
-        alert('❌ Impossibile registrarsi. L\'email potrebbe essere già in uso.');
+      body: JSON.stringify(body)
+    })
+    .then(async response => {
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Errore indefinito lato server');
       }
+      return data;
+    })
+    .then(() => {
+      alert('🎉 Registrazione completata con successo! Ora puoi effettuare l\'accesso.');
+      window.location.href = '/login'; // Ridirezione sicura e immediata
+    })
+    .catch((err) => {
+      console.error('Errore durante la registrazione:', err);
+      alert(`❌ Impossibile completare la registrazione: ${err.message || 'Email o Username già esistenti.'}`);
     });
   }
 }

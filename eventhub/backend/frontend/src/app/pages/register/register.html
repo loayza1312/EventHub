@@ -1,27 +1,35 @@
-<div style="max-width: 400px; margin: 40px auto; padding: 40px 30px; background-color: #1e293b; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border: 1px solid #334155; font-family: Arial, sans-serif;">
+<div style="max-width: 400px; margin: 60px auto; padding: 40px 30px; background-color: #1e293b; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border: 1px solid #334155; font-family: Arial, sans-serif;">
   
   <h2 style="text-align: center; color: #f8fafc; margin-bottom: 10px; font-weight: 800; font-size: 28px;">Crea Account</h2>
   <p style="text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 25px;">Unisciti a EventHub e inizia a prenotare.</p>
 
-  <form (ngSubmit)="onRegister()">
+  <form (submit)="onRegister($event)">
     <div style="margin-bottom: 15px;">
-      <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; font-size: 14px;">Nome Completo</label>
-      <input type="text" [(ngModel)]="name" name="name" placeholder="Mario Rossi" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white;" required>
+      <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; font-size: 14px;">Nome Utente</label>
+      <input type="text" [(ngModel)]="username" name="username" placeholder="MarioRossi" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white; outline: none;" required>
     </div>
 
     <div style="margin-bottom: 15px;">
       <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; font-size: 14px;">Indirizzo Email</label>
-      <input type="email" [(ngModel)]="email" name="email" placeholder="mario@esempio.com" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white;" required>
+      <input type="email" [(ngModel)]="email" name="email" placeholder="mario@esempio.com" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white; outline: none;" required>
     </div>
 
     <div style="margin-bottom: 15px;">
       <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; font-size: 14px;">Password</label>
-      <input type="password" [(ngModel)]="password" name="password" placeholder="Minimo 6 caratteri" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white;" required>
+      <input type="password" [(ngModel)]="password" name="password" placeholder="Minimo 6 caratteri" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white; outline: none;" required>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; font-size: 14px;">Conferma Password</label>
+      <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Ripeti la password" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white; outline: none;" required>
     </div>
 
     <div style="margin-bottom: 25px;">
-      <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; font-size: 14px;">Conferma Password</label>
-      <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Ripeti la password" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white;" required>
+      <label style="display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; font-size: 14px;">Tipo di Account</label>
+      <select [(ngModel)]="role" name="role" style="width: 100%; padding: 12px; background-color: #0f172a; border: 1px solid #475569; border-radius: 8px; box-sizing: border-box; font-size: 14px; color: white; outline: none; cursor: pointer;">
+        <option value="user">Spettatore (User)</option>
+        <option value="organizer">Organizzatore (Organizer)</option>
+      </select>
     </div>
 
     <button type="submit" style="width: 100%; background: linear-gradient(to right, #4f46e5, #6366f1); color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 16px; box-shadow: 0 4px 15px rgba(79,70,229,0.3);">
@@ -30,7 +38,7 @@
   </form>
 
   <p style="text-align: center; margin-top: 25px; font-size: 14px; color: #94a3b8;">
-    Hai già un account? <a routerLink="/login" style="color: #818cf8; text-decoration: none; font-weight: bold;">Accedi qui</a>
+    Hai già un account? <a href="/login" style="color: #818cf8; text-decoration: none; font-weight: bold;">Accedi qui</a>
   </p>
 
 </div>
